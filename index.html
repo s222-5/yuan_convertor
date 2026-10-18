@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="OG ¥→$">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#2a33c9">
+<script src="xlsx.mini.min.js" defer></script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -52,9 +53,24 @@ textarea{height:90px;font-size:12px;resize:vertical}
 .total small{display:block;font-size:13px;opacity:.85}
 .total b{font-size:24px}
 .total div:last-child{text-align:right}
+#gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
+#gate[hidden]{display:none}
+#gate img{width:84px;height:84px;border-radius:50%}
+#gate h2{margin:0;font-size:20px;color:var(--navy)}#gate p{margin:0;color:var(--muted);max-width:320px}
+#gate input{max-width:260px;text-align:center;letter-spacing:1px;text-transform:uppercase}
+#gbtn{border:0;background:var(--blue);color:var(--onblue);font-weight:700;font-size:16px;padding:12px 22px;border-radius:12px;cursor:pointer}
+#gmsg{color:#c0392b;min-height:20px;max-width:320px}
+.tabs{width:100%;margin-bottom:12px}.tabs button{flex:1;padding:10px;font-size:15px}
+.dayrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surface);cursor:pointer}
+.dayrow b{color:var(--navy)}.dayrow small{color:var(--muted);display:block}
+.bh{font-size:13px;color:var(--muted);margin:12px 0 4px}.bh:first-child{margin-top:0}
+.ar{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid var(--line)}
+#v-arc .lb{margin:10px 0}
+#xb{margin-bottom:12px;font-weight:600;color:var(--navy)}
 </style>
 </head>
 <body>
+<div id="gate"><div class="seg" id="glangs"><button data-l="ru">RU</button><button data-l="tk">TK</button><button data-l="en">EN</button></div><img src="logo.png" alt="OG"><h2 id="g-title"></h2><p id="g-hint"></p><input id="gcode" autocapitalize="characters" autocomplete="off"><button id="gbtn"></button><div id="gmsg"></div></div>
 <div class="wrap">
 <header>
 <img src="logo.png" alt="OG">
@@ -63,6 +79,9 @@ textarea{height:90px;font-size:12px;resize:vertical}
 <button class="ib" id="theme" aria-label="theme">◐</button>
 <button class="ib" id="mbtn" aria-label="menu">☰</button>
 </header>
+<div class="seg tabs" id="tabs"><button data-v="calc"></button><button data-v="arc"></button></div>
+<div id="xb" class="card" hidden></div>
+<div id="v-calc">
 
 <section class="card" id="menu">
 <label class="lb" id="t-backup"></label>
@@ -84,35 +103,59 @@ textarea{height:90px;font-size:12px;resize:vertical}
 <div class="card" id="list"></div>
 <button class="add" id="add"></button>
 </section>
+</div>
+<div id="v-arc" hidden><div class="msg" id="amsg"></div><div id="arcbody"></div></div>
 
-<div class="total">
+<div class="total" id="tb">
 <div><small id="t-ty"></small><b id="sy">0</b></div>
 <div><small id="t-tu"></small><b id="su">0</b></div>
 </div>
 </div>
 
+<script src="config.js"></script>
 <script>
 const T={
 ru:{title:"Юань → доллар",backup:"Резервная копия",save:"Сохранить",file:"Загрузить из файла",clear:"Очистить список",sure:"Нажмите ещё раз",rate:"Курс доллара",items:"Товары",name:"Название товара",yuan:"Юани",add:"+ Добавить товар",ty:"Итого, ¥",tu:"Итого, $",empty:"Товаров пока нет. Добавьте первый.",copied:"Файл сохранён",ok:"Загружено",bad:"Неверные данные"},
 tk:{title:"Ýuan → dollar",backup:"Ätiýaçlyk nusga",save:"Ýatda sakla",file:"Faýldan ýükle",clear:"Sanawy arassala",sure:"Ýene bir gezek bas",rate:"Dollar kursy",items:"Harytlar",name:"Haryt ady",yuan:"Ýuan",add:"+ Haryt goş",ty:"Jemi, ¥",tu:"Jemi, $",empty:"Heniz haryt ýok. Ilkisini goş.",copied:"Faýl ýatda saklandy",ok:"Ýüklendi",bad:"Nädogry maglumat"},
 en:{title:"Yuan → dollar",backup:"Backup",save:"Save",file:"Load from file",clear:"Clear list",sure:"Tap again",rate:"Dollar rate",items:"Products",name:"Product name",yuan:"Yuan",add:"+ Add product",ty:"Total, ¥",tu:"Total, $",empty:"No products yet. Add the first one.",copied:"File saved",ok:"Loaded",bad:"Invalid data"}};
+Object.assign(T.ru,{gTitle:"Код доступа",gHint:"Введите код, который выдал владелец.",gBtn:"Активировать",gInvalid:"Неверный код",gInUse:"Этот код уже используется на другом устройстве",gRevoked:"Доступ отключён",gExpired:"Срок действия кода истёк",gNet:"Нет интернета или сервер недоступен. Для активации нужен интернет.",gCfg:"Приложение не настроено"});
+Object.assign(T.tk,{gTitle:"Giriş kody",gHint:"Eýesiniň beren kodyny giriziň.",gBtn:"Işjeňleşdir",gInvalid:"Nädogry kod",gInUse:"Bu kod başga enjamda ulanylýar",gRevoked:"Giriş ýapyldy",gExpired:"Kodyň möhleti gutardy",gNet:"Internet ýok ýa-da serwer elýeterli däl. Işjeňleşdirmek üçin internet gerek.",gCfg:"Programma sazlanmandyr"});
+Object.assign(T.en,{gTitle:"Access code",gHint:"Enter the code given to you by the owner.",gBtn:"Activate",gInvalid:"Invalid code",gInUse:"This code is already used on another device",gRevoked:"Access has been disabled",gExpired:"This code has expired",gNet:"No internet or server unavailable. Internet is needed to activate.",gCfg:"The app is not configured"});
+Object.assign(T.ru,{tabCalc:"Расчёт",tabArc:"Архив",arcEmpty:"Архив пуст",open:"открыт",back:"← Назад",xDay:"Excel: этот день",xAll:"Excel: всё",xImp:"Из Excel",pull:"С сервера",pend:"ожидает отправки: ",synced:"всё отправлено",nItems:"тов.",gotN:"Добавлено: ",noX:"Excel недоступен",batch:"Партия",rateL:"Курс",xb:"Excel за прошлые дни не сохранён. Дней: ",xSave:"Сохранить Excel",later:"Позже"});
+Object.assign(T.tk,{tabCalc:"Hasap",tabArc:"Arhiw",arcEmpty:"Arhiw boş",open:"açyk",back:"← Yza",xDay:"Excel: şu gün",xAll:"Excel: ählisi",xImp:"Excel-den",pull:"Serwerden",pend:"iberilmegi garaşýar: ",synced:"ählisi iberildi",nItems:"haryt",gotN:"Goşuldy: ",noX:"Excel elýeterli däl",batch:"Partiýa",rateL:"Kurs",xb:"Öňki günleriň Excel-i saklanmady. Günler: ",xSave:"Excel sakla",later:"Soňra"});
+Object.assign(T.en,{tabCalc:"Calc",tabArc:"Archive",arcEmpty:"Archive is empty",open:"open",back:"← Back",xDay:"Excel: this day",xAll:"Excel: all",xImp:"From Excel",pull:"From server",pend:"waiting to sync: ",synced:"all synced",nItems:"items",gotN:"Added: ",noX:"Excel unavailable",batch:"Batch",rateL:"Rate",xb:"Excel for past days is not saved. Days: ",xSave:"Save Excel",later:"Later"});
 const K="og-yd1";
-let S={lang:"ru",theme:"",rate:"",mode:"usd",items:[]};
+let S={lang:"ru",theme:"",rate:"",mode:"usd",cur:"",items:[]};
 try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 const $=i=>document.getElementById(i);
-const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const AR="og-yd-arc";
+let ARC={b:[]};try{const x=JSON.parse(localStorage.getItem(AR));if(x&&Array.isArray(x.b))ARC=x}catch(e){}
+ARC.ex=ARC.ex||{};
+const asave=()=>{try{localStorage.setItem(AR,JSON.stringify(ARC))}catch(e){}};
+const uid=()=>Math.random().toString(36).slice(2,6)+Date.now().toString(36).slice(-4);
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const rY=()=>{const r=num(S.rate);return r>0?(S.mode==="cny"?1/r:r):0};
+let syT=null;
+function touch(){
+const it=S.items.filter(i=>i.name||i.yuan).map(i=>({name:i.name,yuan:i.yuan}));
+let b=ARC.b.find(x=>x.id===S.cur);
+if(b&&b.day!==today()){b.c=true;b.v++;b=null;S.cur=""}
+if(!b){if(!it.length)return;b={id:uid(),day:today(),r:0,items:[],c:false,v:0,sv:-1,ts:Date.now()};ARC.b.push(b);S.cur=b.id}
+const r=rY();if(JSON.stringify(b.items)===JSON.stringify(it)&&b.r===r)return;
+b.items=it;b.r=r;b.ts=Date.now();b.v++;asave();clearTimeout(syT);syT=setTimeout(sync,2000)}
+const save=()=>{touch();try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
 const num=v=>{const n=parseFloat(String(v).replace(/\s/g,"").replace(",","."));return isFinite(n)?n:0};
 const fmt=n=>n.toLocaleString("ru-RU",{minimumFractionDigits:2,maximumFractionDigits:2});
 const t=k=>T[S.lang][k];
 let armed=false;
 
 function text(){
-document.documentElement.lang=S.lang;
+document.documentElement.lang=S.lang;gateText();$("tabs").children[0].textContent=t("tabCalc");$("tabs").children[1].textContent=t("tabArc");if(typeof VIEW!=="undefined"&&VIEW==="arc")arc();if(typeof xbHide!=="undefined")xbar();
 const m={"t-title":"title","t-backup":"backup","t-rate":"rate","t-items":"items","t-ty":"ty","t-tu":"tu"};
 for(const id in m)$(id).textContent=t(m[id]);
 $("save").textContent=t("save");$("add").textContent=t("add");$("clear").textContent=t("clear");
 $("t-file").textContent=t("file");
-document.querySelectorAll("#langs button").forEach(b=>b.classList.toggle("on",b.dataset.l===S.lang));
+document.querySelectorAll("#langs button,#glangs button").forEach(b=>b.classList.toggle("on",b.dataset.l===S.lang));
 list();
 }
 function calc(){
@@ -135,7 +178,7 @@ L.appendChild(r)});
 calc();
 }
 function theme(){if(S.theme)document.documentElement.dataset.theme=S.theme;else delete document.documentElement.dataset.theme}
-function say(s){$("msg").textContent=s;setTimeout(()=>{$("msg").textContent=""},2500)}
+function say(s){$("msg").textContent=s;$("amsg").textContent=s;setTimeout(()=>{$("msg").textContent="";$("amsg").textContent=""},2500)}
 function apply(txt){
 try{const d=JSON.parse(txt);if(!d||!Array.isArray(d.items))throw 0;
 S.items=d.items.map(x=>({name:String(x.name||""),yuan:String(x.yuan||"")}));S.rate=String(d.rate||"");S.mode=d.mode==="cny"?"cny":"usd";save();rateUI();$("rate").value=S.rate;list();say(t("ok"))}
@@ -147,7 +190,7 @@ $("rate").value=S.rate;
 $("swap").onclick=()=>{const r=num(S.rate);if(r>0)S.rate=String(+(1/r).toPrecision(6));S.mode=S.mode==="cny"?"usd":"cny";$("rate").value=S.rate;save();rateUI();calc()};
 $("rate").oninput=e=>{S.rate=e.target.value;save();calc()};
 $("add").onclick=()=>{S.items.push({name:"",yuan:""});save();list();const n=document.querySelectorAll(".nm");n[n.length-1].focus()};
-$("langs").onclick=e=>{const l=e.target.dataset.l;if(l){S.lang=l;save();text()}};
+$("langs").onclick=$("glangs").onclick=e=>{const l=e.target.dataset.l;if(l){S.lang=l;save();text()}};
 $("theme").onclick=()=>{const dark=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dark?"light":"dark";save();theme()};
 $("mbtn").onclick=()=>{$("menu").classList.toggle("open")};
 $("save").onclick=async()=>{const name="OG-yuan-dollar-backup.json",data=dump();
@@ -156,8 +199,85 @@ try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.shar
 const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=name;a.click();say(t("copied"))};
 $("file").onchange=e=>{const f=e.target.files[0];if(f)f.text().then(apply);e.target.value=""};
 $("clear").onclick=()=>{if(!armed){armed=true;$("clear").textContent=t("sure");setTimeout(()=>{armed=false;$("clear").textContent=t("clear")},3000);return}
-armed=false;S.items=[];save();list();$("clear").textContent=t("clear")};
-theme();rateUI();text();
+armed=false;closeCur();S.items=[];save();list();$("clear").textContent=t("clear")};
+function closeCur(){touch();const b=ARC.b.find(x=>x.id===S.cur);if(b){b.c=true;b.v++;asave()}S.cur="";clearTimeout(syT);syT=setTimeout(sync,1000)}
+function roll(){const b=ARC.b.find(x=>x.id===S.cur);if(b&&b.day!==today()){b.c=true;b.v++;S.cur="";S.items=[];asave();save();list()}}
+const OPEN=!(window.OG&&window.OG.url);
+let xbHide=false;
+function pendDays(){const m={},td=today();ARC.b.forEach(b=>{if(b.day<td&&b.items.length&&!ARC.ex[b.day])(m[b.day]=m[b.day]||[]).push(b)});return Object.keys(m).sort().map(d=>({d,bs:m[d]}))}
+function xbar(){const el=$("xb"),P=pendDays();if(!P.length||xbHide){el.hidden=true;return}
+el.hidden=false;el.innerHTML="";el.append(h("div","",t("xb")+P.length));
+const bt=h("div","btns"),s=h("button","",t("xSave")),l=h("button","",t("later"));
+s.onclick=async()=>{const bs=P.flatMap(g=>g.bs),n=P.length===1?P[0].d:P[0].d+"_"+P[P.length-1].d;if(await xport(bs,"OG-arsiv-"+n+".xlsx")){P.forEach(g=>{ARC.ex[g.d]=true});asave();xbar()}};
+l.onclick=()=>{xbHide=true;xbar()};bt.append(s,l);el.append(bt)}
+let syncing=false;
+async function sync(){const c=window.OG||{};if(syncing||!A||!A.code||!navigator.onLine||!c.url)return;
+const pend=ARC.b.filter(b=>b.v!==b.sv);if(!pend.length)return;syncing=true;
+try{for(let i=0;i<pend.length;i+=40){const ch=pend.slice(i,i+40),snap=ch.map(b=>[b,b.v]);
+const r=await api("push",{code:A.code,device:dev(),batches:ch.map(b=>({id:b.id,day:b.day,r:b.r,items:b.items,c:b.c,v:b.v}))});
+if(r!=="ok")break;snap.forEach(([b,v])=>{b.sv=v});asave()}}catch(e){}
+syncing=false;if(VIEW==="arc")arc()}
+async function pull(){if(!A||!A.code||!navigator.onLine){say(t("gNet"));return}
+try{const L=await api("pull",{code:A.code,device:dev()});if(!Array.isArray(L))throw 0;let n=0;
+L.forEach(s=>{const b=ARC.b.find(x=>x.id===s.id),nb={id:s.id,day:String(s.day).slice(0,10),r:+s.r||0,items:s.items||[],c:true,v:s.v,sv:s.v,ts:0};
+if(!b){ARC.b.push(nb);n++}else if(s.v>b.v&&b.id!==S.cur){Object.assign(b,nb);n++}});
+asave();if(VIEW==="arc")arc();say(t("gotN")+n)}catch(e){say(t("gNet"))}}
+const fday=d=>d.split("-").reverse().join(".");
+const dd=v=>typeof v==="number"?new Date(Math.round((v-25569)*864e5)).toISOString().slice(0,10):String(v).slice(0,10);
+function days(){const m={};ARC.b.forEach(b=>{if(!b.items.length)return;(m[b.day]=m[b.day]||[]).push(b)});
+return Object.keys(m).sort().reverse().map(d=>({d,bs:m[d].sort((a,c)=>(a.ts||0)-(c.ts||0))}))}
+function tot(bs){let y=0,u=0,n=0;bs.forEach(b=>b.items.forEach(i=>{const v=num(i.yuan);y+=v;n++;if(b.r>0)u+=v/b.r}));return{y,u,n}}
+async function xport(bs,name){if(!window.XLSX){say(t("noX"));return false}
+const rows=[];bs.forEach(b=>b.items.forEach(i=>{const v=num(i.yuan);rows.push({Day:b.day,Batch:b.id,Closed:b.c?1:0,Product:i.name,Yuan:v,Rate:b.r||"",USD:b.r>0?+(v/b.r).toFixed(2):""})}));
+const ds={};bs.forEach(b=>{(ds[b.day]=ds[b.day]||[]).push(b)});
+const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Data");
+XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.keys(ds).sort().map(d=>{const x=tot(ds[d]);return{Day:d,Items:x.n,Yuan:+x.y.toFixed(2),USD:+x.u.toFixed(2)}})),"Totals");
+const f=new File([XLSX.write(wb,{bookType:"xlsx",type:"array"})],name,{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});say(t("copied"));return true}}catch(e){if(e&&e.name==="AbortError")return false}
+const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=name;a.click();say(t("copied"));return true}
+async function imp(f){if(!window.XLSX){say(t("noX"));return}
+try{const wb=XLSX.read(await f.arrayBuffer(),{type:"array"}),rs=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]),m={};
+rs.forEach(r=>{if(!r.Batch||!r.Day)return;const k=String(r.Batch),b=m[k]=m[k]||{id:k,day:dd(r.Day),r:num(r.Rate),items:[],c:true,v:1,sv:-1,ts:0};b.items.push({name:String(r.Product||""),yuan:String(r.Yuan==null?"":r.Yuan)})});
+let n=0;Object.values(m).forEach(b=>{if(!ARC.b.find(x=>x.id===b.id)){ARC.b.push(b);n++}});
+Object.values(m).forEach(b=>{ARC.ex[b.day]=true});asave();sync();arc();xbar();say(t("gotN")+n)}catch(e){say(t("bad"))}}
+const h=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
+let VIEW="calc",DAY=null;
+function view(v){VIEW=v;$("v-calc").hidden=v!=="calc";$("v-arc").hidden=v!=="arc";$("tb").style.display=v==="calc"?"":"none";
+document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(v==="arc")arc()}
+function arc(){const el=$("arcbody");el.innerHTML="";const D=days(),bar=h("div","btns");
+const btn=(txt,fn)=>{const b=h("button","",txt);b.onclick=fn;return b};
+if(DAY){const g=D.find(x=>x.d===DAY);if(!g){DAY=null;return arc()}
+bar.append(btn(t("back"),()=>{DAY=null;arc()}),btn(t("xDay"),async()=>{if(await xport(g.bs,"OG-arsiv-"+g.d+".xlsx")){ARC.ex[g.d]=true;asave();xbar()}}));el.append(bar,h("h2","",fday(g.d)));
+const c=h("div","card");
+g.bs.forEach((b,i)=>{c.append(h("div","bh",t("batch")+" "+(i+1)+" · "+t("rateL")+" "+(b.r>0?fmt(b.r):"—")+(b.c?"":" · "+t("open"))));
+b.items.forEach(it=>{const v=num(it.yuan),r=h("div","ar");r.append(h("span","",it.name||"—"),h("span","","¥ "+fmt(v)+(b.r>0?"  ·  $ "+fmt(v/b.r):"")));c.append(r)})});
+const x=tot(g.bs),tc=h("div","card");tc.append(h("b","","¥ "+fmt(x.y)+"  ·  $ "+fmt(x.u)+"  ("+x.n+" "+t("nItems")+")"));el.append(c,tc)}
+else{const f=h("input");f.type="file";f.accept=".xlsx";f.hidden=true;f.onchange=e=>{const x=e.target.files[0];if(x)imp(x);e.target.value=""};
+const lab=h("label","",t("xImp"));lab.append(f);const pend=ARC.b.filter(b=>b.v!==b.sv).length;
+bar.append(btn(t("xAll"),async()=>{if(await xport(D.flatMap(g=>g.bs),"OG-arsiv-hepsi.xlsx")){D.forEach(g=>{ARC.ex[g.d]=true});asave();xbar()}}),lab,...(OPEN?[]:[btn(t("pull"),pull)]));el.append(bar);if(!OPEN)el.append(h("div","lb",pend?t("pend")+pend:t("synced")));
+if(!D.length)el.append(h("div","empty",t("arcEmpty")));
+D.forEach(g=>{const x=tot(g.bs),r=h("div","dayrow"),l=h("div");
+l.append(h("b","",fday(g.d)),h("small","",x.n+" "+t("nItems")+(g.d===today()&&g.bs.some(b=>!b.c)?" · "+t("open"):"")));
+r.append(l,h("div","","¥ "+fmt(x.y)+" · $ "+fmt(x.u)));r.onclick=()=>{DAY=g.d;arc()};el.append(r)})}}
+$("tabs").onclick=e=>{const v=e.target.dataset.v;if(v){DAY=null;view(v)}};
+addEventListener("online",sync);document.addEventListener("visibilitychange",()=>{if(!document.hidden){roll();xbar();sync()}});
+const AK="og-yd-acc",M={invalid:"gInvalid",in_use:"gInUse",revoked:"gRevoked",expired:"gExpired",net:"gNet",cfg:"gCfg"};
+let A=null,GM="";try{A=JSON.parse(localStorage.getItem(AK))}catch(e){}
+function dev(){let d="";try{d=localStorage.getItem("og-yd-dev")}catch(e){}
+if(!d){d=crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2);try{localStorage.setItem("og-yd-dev",d)}catch(e){}}return d}
+async function api(a,b){const c=window.OG||{};const r=await fetch(c.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({a:a},b))});if(!r.ok)throw 0;return r.json()}
+async function check(code){const c=window.OG||{};if(!c.url)return"cfg";
+try{const v=await api("check",{code:code,device:dev()});return["ok","invalid","revoked","expired","in_use"].includes(v)?v:"net"}catch(e){return"net"}}
+function gateText(){$("g-title").textContent=t("gTitle");$("g-hint").textContent=t("gHint");$("gbtn").textContent=t("gBtn");$("gcode").placeholder="OG-XXXXXXXX";$("gmsg").textContent=GM?t(M[GM]):""}
+function lock(r){GM=r||"";$("gate").hidden=false;gateText()}
+async function verify(){if(!A||!A.code)return;const r=await check(A.code);
+if(r==="ok"||r==="net"||r==="cfg")return;
+try{localStorage.removeItem(AK)}catch(e){}A=null;lock(r)}
+$("gbtn").onclick=async()=>{const code=$("gcode").value.trim().toUpperCase();if(!code)return;$("gbtn").disabled=true;const r=await check(code);$("gbtn").disabled=false;
+if(r==="ok"){A={code};try{localStorage.setItem(AK,JSON.stringify(A))}catch(e){}GM="";$("gcode").value="";$("gate").hidden=true;if(!ARC.b.length)pull();else sync()}else lock(r)};
+addEventListener("online",verify);document.addEventListener("visibilitychange",()=>{if(!document.hidden)verify()});
+if(OPEN||(A&&A.code)){$("gate").hidden=true;verify()}
+theme();rateUI();text();view("calc");roll();xbar();sync();
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script>
 </body>
