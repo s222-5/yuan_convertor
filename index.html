@@ -86,7 +86,7 @@ textarea{height:90px;font-size:12px;resize:vertical}
 <section class="card" id="menu">
 <label class="lb" id="t-backup"></label>
 <div class="btns">
-<button id="save"></button>
+<button id="save"></button><button id="clear" class="danger"></button>
 </div>
 <div class="msg" id="msg"></div>
 </section>
@@ -113,15 +113,15 @@ textarea{height:90px;font-size:12px;resize:vertical}
 <script src="config.js"></script>
 <script>
 const T={
-ru:{title:"Юань → доллар",backup:"Архив",save:"В архив",file:"Загрузить из файла",clear:"Очистить список",sure:"Нажмите ещё раз",rate:"Курс доллара",items:"Товары",name:"Название товара",yuan:"Юани",add:"+ Добавить товар",ty:"Итого, ¥",tu:"Итого, $",empty:"Товаров пока нет. Добавьте первый.",copied:"Файл сохранён",ok:"Загружено",bad:"Неверные данные"},
-tk:{title:"Ýuan → dollar",backup:"Arhiw",save:"Arhiwe goş",file:"Faýldan ýükle",clear:"Sanawy arassala",sure:"Ýene bir gezek bas",rate:"Dollar kursy",items:"Harytlar",name:"Haryt ady",yuan:"Ýuan",add:"+ Haryt goş",ty:"Jemi, ¥",tu:"Jemi, $",empty:"Heniz haryt ýok. Ilkisini goş.",copied:"Faýl ýatda saklandy",ok:"Ýüklendi",bad:"Nädogry maglumat"},
-en:{title:"Yuan → dollar",backup:"Archive",save:"Archive now",file:"Load from file",clear:"Clear list",sure:"Tap again",rate:"Dollar rate",items:"Products",name:"Product name",yuan:"Yuan",add:"+ Add product",ty:"Total, ¥",tu:"Total, $",empty:"No products yet. Add the first one.",copied:"File saved",ok:"Loaded",bad:"Invalid data"}};
+ru:{title:"Юань → доллар",backup:"Архив",save:"Сохранить",file:"Загрузить из файла",clear:"Очистить список",sure:"Нажмите ещё раз",rate:"Курс доллара",items:"Товары",name:"Название товара",yuan:"Юани",add:"+ Добавить товар",ty:"Итого, ¥",tu:"Итого, $",empty:"Товаров пока нет. Добавьте первый.",copied:"Файл сохранён",ok:"Загружено",bad:"Неверные данные"},
+tk:{title:"Ýuan → dollar",backup:"Arhiw",save:"Sakla",file:"Faýldan ýükle",clear:"Sanawy arassala",sure:"Ýene bir gezek bas",rate:"Dollar kursy",items:"Harytlar",name:"Haryt ady",yuan:"Ýuan",add:"+ Haryt goş",ty:"Jemi, ¥",tu:"Jemi, $",empty:"Heniz haryt ýok. Ilkisini goş.",copied:"Faýl ýatda saklandy",ok:"Ýüklendi",bad:"Nädogry maglumat"},
+en:{title:"Yuan → dollar",backup:"Archive",save:"Save",file:"Load from file",clear:"Clear list",sure:"Tap again",rate:"Dollar rate",items:"Products",name:"Product name",yuan:"Yuan",add:"+ Add product",ty:"Total, ¥",tu:"Total, $",empty:"No products yet. Add the first one.",copied:"File saved",ok:"Loaded",bad:"Invalid data"}};
 Object.assign(T.ru,{gTitle:"Код доступа",gHint:"Введите код, который выдал владелец.",gBtn:"Активировать",gInvalid:"Неверный код",gInUse:"Этот код уже используется на другом устройстве",gRevoked:"Доступ отключён",gExpired:"Срок действия кода истёк",gNet:"Нет интернета или сервер недоступен. Для активации нужен интернет.",gCfg:"Приложение не настроено"});
 Object.assign(T.tk,{gTitle:"Giriş kody",gHint:"Eýesiniň beren kodyny giriziň.",gBtn:"Işjeňleşdir",gInvalid:"Nädogry kod",gInUse:"Bu kod başga enjamda ulanylýar",gRevoked:"Giriş ýapyldy",gExpired:"Kodyň möhleti gutardy",gNet:"Internet ýok ýa-da serwer elýeterli däl. Işjeňleşdirmek üçin internet gerek.",gCfg:"Programma sazlanmandyr"});
 Object.assign(T.en,{gTitle:"Access code",gHint:"Enter the code given to you by the owner.",gBtn:"Activate",gInvalid:"Invalid code",gInUse:"This code is already used on another device",gRevoked:"Access has been disabled",gExpired:"This code has expired",gNet:"No internet or server unavailable. Internet is needed to activate.",gCfg:"The app is not configured"});
-Object.assign(T.ru,{tabCalc:"Расчёт",tabArc:"Архив",arcEmpty:"Архив пуст",open:"открыт",back:"← Назад",xDay:"Excel: этот день",xAll:"Excel: всё",xImp:"Из Excel",pull:"С сервера",pend:"ожидает отправки: ",synced:"всё отправлено",nItems:"тов.",gotN:"Добавлено: ",noX:"Excel недоступен",batch:"Партия",rateL:"Курс",xb:"Excel за прошлые дни не сохранён. Дней: ",xSave:"Сохранить Excel",later:"Позже",archived:"Добавлено в архив",nothing:"Список пуст"});
-Object.assign(T.tk,{tabCalc:"Hasap",tabArc:"Arhiw",arcEmpty:"Arhiw boş",open:"açyk",back:"← Yza",xDay:"Excel: şu gün",xAll:"Excel: ählisi",xImp:"Excel-den",pull:"Serwerden",pend:"iberilmegi garaşýar: ",synced:"ählisi iberildi",nItems:"haryt",gotN:"Goşuldy: ",noX:"Excel elýeterli däl",batch:"Partiýa",rateL:"Kurs",xb:"Öňki günleriň Excel-i saklanmady. Günler: ",xSave:"Excel sakla",later:"Soňra",archived:"Arhiwe goşuldy",nothing:"Sanaw boş"});
-Object.assign(T.en,{tabCalc:"Calc",tabArc:"Archive",arcEmpty:"Archive is empty",open:"open",back:"← Back",xDay:"Excel: this day",xAll:"Excel: all",xImp:"From Excel",pull:"From server",pend:"waiting to sync: ",synced:"all synced",nItems:"items",gotN:"Added: ",noX:"Excel unavailable",batch:"Batch",rateL:"Rate",xb:"Excel for past days is not saved. Days: ",xSave:"Save Excel",later:"Later",archived:"Added to archive",nothing:"The list is empty"});
+Object.assign(T.ru,{tabCalc:"Расчёт",tabArc:"Архив",arcEmpty:"Архив пуст",open:"открыт",back:"← Назад",xDay:"Excel: этот день",xAll:"Excel: всё",xImp:"Из Excel",pull:"С сервера",pend:"ожидает отправки: ",synced:"всё отправлено",nItems:"тов.",gotN:"Добавлено: ",noX:"Excel недоступен",batch:"Партия",rateL:"Курс",xb:"Excel за прошлые дни не сохранён. Дней: ",xSave:"Сохранить Excel",later:"Позже",archived:"Сохранено в архив",nothing:"Список пуст",cleared:"Очищено, запись осталась в архиве"});
+Object.assign(T.tk,{tabCalc:"Hasap",tabArc:"Arhiw",arcEmpty:"Arhiw boş",open:"açyk",back:"← Yza",xDay:"Excel: şu gün",xAll:"Excel: ählisi",xImp:"Excel-den",pull:"Serwerden",pend:"iberilmegi garaşýar: ",synced:"ählisi iberildi",nItems:"haryt",gotN:"Goşuldy: ",noX:"Excel elýeterli däl",batch:"Partiýa",rateL:"Kurs",xb:"Öňki günleriň Excel-i saklanmady. Günler: ",xSave:"Excel sakla",later:"Soňra",archived:"Arhiwe saklandy",nothing:"Sanaw boş",cleared:"Arassalandy, ýazgy arhiwde galdy"});
+Object.assign(T.en,{tabCalc:"Calc",tabArc:"Archive",arcEmpty:"Archive is empty",open:"open",back:"← Back",xDay:"Excel: this day",xAll:"Excel: all",xImp:"From Excel",pull:"From server",pend:"waiting to sync: ",synced:"all synced",nItems:"items",gotN:"Added: ",noX:"Excel unavailable",batch:"Batch",rateL:"Rate",xb:"Excel for past days is not saved. Days: ",xSave:"Save Excel",later:"Later",archived:"Saved to archive",nothing:"The list is empty",cleared:"Cleared, the record stays in the archive"});
 const K="og-yd1";
 let S={lang:"ru",theme:"",rate:"",mode:"usd",cur:"",items:[]};
 try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
@@ -151,7 +151,7 @@ function text(){
 document.documentElement.lang=S.lang;gateText();$("tabs").children[0].textContent=t("tabCalc");$("tabs").children[1].textContent=t("tabArc");if(typeof VIEW!=="undefined"&&VIEW==="arc")arc();if(typeof xbHide!=="undefined")xbar();
 const m={"t-title":"title","t-backup":"backup","t-rate":"rate","t-items":"items","t-ty":"ty","t-tu":"tu"};
 for(const id in m)$(id).textContent=t(m[id]);
-$("save").textContent=t("save");$("add").textContent=t("add");
+$("save").textContent=t("save");$("add").textContent=t("add");$("clear").textContent=t("clear");
 document.querySelectorAll("#langs button,#glangs button").forEach(b=>b.classList.toggle("on",b.dataset.l===S.lang));
 list();
 }
@@ -190,8 +190,9 @@ $("add").onclick=()=>{S.items.push({name:"",yuan:""});save();list();const n=docu
 $("langs").onclick=$("glangs").onclick=e=>{const l=e.target.dataset.l;if(l){S.lang=l;save();text()}};
 $("theme").onclick=()=>{const dark=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dark?"light":"dark";save();theme()};
 $("mbtn").onclick=()=>{$("menu").classList.toggle("open")};
-$("save").onclick=()=>{if(!S.items.some(i=>i.name||i.yuan)){say(t("nothing"));return}
-closeCur();S.items=[];save();list();$("menu").classList.remove("open");DAY=null;view("arc");say(t("archived"))};
+$("save").onclick=()=>{if(!S.items.some(i=>i.name||i.yuan)){say(t("nothing"));return}save();asave();say(t("archived"))};
+$("clear").onclick=()=>{if(!armed){armed=true;$("clear").textContent=t("sure");setTimeout(()=>{armed=false;$("clear").textContent=t("clear")},3000);return}
+armed=false;closeCur();S.items=[];save();list();$("clear").textContent=t("clear");say(t("cleared"))};
 function closeCur(){touch();const b=ARC.b.find(x=>x.id===S.cur);if(b){b.c=true;b.v++;asave()}S.cur="";clearTimeout(syT);syT=setTimeout(sync,1000)}
 function roll(){const b=ARC.b.find(x=>x.id===S.cur);if(b&&b.day!==today()){b.c=true;b.v++;S.cur="";S.items=[];asave();save();list()}}
 const OPEN=!(window.OG&&window.OG.url);
