@@ -87,8 +87,6 @@ textarea{height:90px;font-size:12px;resize:vertical}
 <label class="lb" id="t-backup"></label>
 <div class="btns">
 <button id="save"></button>
-<label><span id="t-file"></span><input type="file" id="file" accept=".json,application/json,.txt" hidden></label>
-<button id="clear" class="danger"></button>
 </div>
 <div class="msg" id="msg"></div>
 </section>
@@ -115,15 +113,15 @@ textarea{height:90px;font-size:12px;resize:vertical}
 <script src="config.js"></script>
 <script>
 const T={
-ru:{title:"Юань → доллар",backup:"Резервная копия",save:"Сохранить",file:"Загрузить из файла",clear:"Очистить список",sure:"Нажмите ещё раз",rate:"Курс доллара",items:"Товары",name:"Название товара",yuan:"Юани",add:"+ Добавить товар",ty:"Итого, ¥",tu:"Итого, $",empty:"Товаров пока нет. Добавьте первый.",copied:"Файл сохранён",ok:"Загружено",bad:"Неверные данные"},
-tk:{title:"Ýuan → dollar",backup:"Ätiýaçlyk nusga",save:"Ýatda sakla",file:"Faýldan ýükle",clear:"Sanawy arassala",sure:"Ýene bir gezek bas",rate:"Dollar kursy",items:"Harytlar",name:"Haryt ady",yuan:"Ýuan",add:"+ Haryt goş",ty:"Jemi, ¥",tu:"Jemi, $",empty:"Heniz haryt ýok. Ilkisini goş.",copied:"Faýl ýatda saklandy",ok:"Ýüklendi",bad:"Nädogry maglumat"},
-en:{title:"Yuan → dollar",backup:"Backup",save:"Save",file:"Load from file",clear:"Clear list",sure:"Tap again",rate:"Dollar rate",items:"Products",name:"Product name",yuan:"Yuan",add:"+ Add product",ty:"Total, ¥",tu:"Total, $",empty:"No products yet. Add the first one.",copied:"File saved",ok:"Loaded",bad:"Invalid data"}};
+ru:{title:"Юань → доллар",backup:"Архив",save:"В архив",file:"Загрузить из файла",clear:"Очистить список",sure:"Нажмите ещё раз",rate:"Курс доллара",items:"Товары",name:"Название товара",yuan:"Юани",add:"+ Добавить товар",ty:"Итого, ¥",tu:"Итого, $",empty:"Товаров пока нет. Добавьте первый.",copied:"Файл сохранён",ok:"Загружено",bad:"Неверные данные"},
+tk:{title:"Ýuan → dollar",backup:"Arhiw",save:"Arhiwe goş",file:"Faýldan ýükle",clear:"Sanawy arassala",sure:"Ýene bir gezek bas",rate:"Dollar kursy",items:"Harytlar",name:"Haryt ady",yuan:"Ýuan",add:"+ Haryt goş",ty:"Jemi, ¥",tu:"Jemi, $",empty:"Heniz haryt ýok. Ilkisini goş.",copied:"Faýl ýatda saklandy",ok:"Ýüklendi",bad:"Nädogry maglumat"},
+en:{title:"Yuan → dollar",backup:"Archive",save:"Archive now",file:"Load from file",clear:"Clear list",sure:"Tap again",rate:"Dollar rate",items:"Products",name:"Product name",yuan:"Yuan",add:"+ Add product",ty:"Total, ¥",tu:"Total, $",empty:"No products yet. Add the first one.",copied:"File saved",ok:"Loaded",bad:"Invalid data"}};
 Object.assign(T.ru,{gTitle:"Код доступа",gHint:"Введите код, который выдал владелец.",gBtn:"Активировать",gInvalid:"Неверный код",gInUse:"Этот код уже используется на другом устройстве",gRevoked:"Доступ отключён",gExpired:"Срок действия кода истёк",gNet:"Нет интернета или сервер недоступен. Для активации нужен интернет.",gCfg:"Приложение не настроено"});
 Object.assign(T.tk,{gTitle:"Giriş kody",gHint:"Eýesiniň beren kodyny giriziň.",gBtn:"Işjeňleşdir",gInvalid:"Nädogry kod",gInUse:"Bu kod başga enjamda ulanylýar",gRevoked:"Giriş ýapyldy",gExpired:"Kodyň möhleti gutardy",gNet:"Internet ýok ýa-da serwer elýeterli däl. Işjeňleşdirmek üçin internet gerek.",gCfg:"Programma sazlanmandyr"});
 Object.assign(T.en,{gTitle:"Access code",gHint:"Enter the code given to you by the owner.",gBtn:"Activate",gInvalid:"Invalid code",gInUse:"This code is already used on another device",gRevoked:"Access has been disabled",gExpired:"This code has expired",gNet:"No internet or server unavailable. Internet is needed to activate.",gCfg:"The app is not configured"});
-Object.assign(T.ru,{tabCalc:"Расчёт",tabArc:"Архив",arcEmpty:"Архив пуст",open:"открыт",back:"← Назад",xDay:"Excel: этот день",xAll:"Excel: всё",xImp:"Из Excel",pull:"С сервера",pend:"ожидает отправки: ",synced:"всё отправлено",nItems:"тов.",gotN:"Добавлено: ",noX:"Excel недоступен",batch:"Партия",rateL:"Курс",xb:"Excel за прошлые дни не сохранён. Дней: ",xSave:"Сохранить Excel",later:"Позже"});
-Object.assign(T.tk,{tabCalc:"Hasap",tabArc:"Arhiw",arcEmpty:"Arhiw boş",open:"açyk",back:"← Yza",xDay:"Excel: şu gün",xAll:"Excel: ählisi",xImp:"Excel-den",pull:"Serwerden",pend:"iberilmegi garaşýar: ",synced:"ählisi iberildi",nItems:"haryt",gotN:"Goşuldy: ",noX:"Excel elýeterli däl",batch:"Partiýa",rateL:"Kurs",xb:"Öňki günleriň Excel-i saklanmady. Günler: ",xSave:"Excel sakla",later:"Soňra"});
-Object.assign(T.en,{tabCalc:"Calc",tabArc:"Archive",arcEmpty:"Archive is empty",open:"open",back:"← Back",xDay:"Excel: this day",xAll:"Excel: all",xImp:"From Excel",pull:"From server",pend:"waiting to sync: ",synced:"all synced",nItems:"items",gotN:"Added: ",noX:"Excel unavailable",batch:"Batch",rateL:"Rate",xb:"Excel for past days is not saved. Days: ",xSave:"Save Excel",later:"Later"});
+Object.assign(T.ru,{tabCalc:"Расчёт",tabArc:"Архив",arcEmpty:"Архив пуст",open:"открыт",back:"← Назад",xDay:"Excel: этот день",xAll:"Excel: всё",xImp:"Из Excel",pull:"С сервера",pend:"ожидает отправки: ",synced:"всё отправлено",nItems:"тов.",gotN:"Добавлено: ",noX:"Excel недоступен",batch:"Партия",rateL:"Курс",xb:"Excel за прошлые дни не сохранён. Дней: ",xSave:"Сохранить Excel",later:"Позже",archived:"Добавлено в архив",nothing:"Список пуст"});
+Object.assign(T.tk,{tabCalc:"Hasap",tabArc:"Arhiw",arcEmpty:"Arhiw boş",open:"açyk",back:"← Yza",xDay:"Excel: şu gün",xAll:"Excel: ählisi",xImp:"Excel-den",pull:"Serwerden",pend:"iberilmegi garaşýar: ",synced:"ählisi iberildi",nItems:"haryt",gotN:"Goşuldy: ",noX:"Excel elýeterli däl",batch:"Partiýa",rateL:"Kurs",xb:"Öňki günleriň Excel-i saklanmady. Günler: ",xSave:"Excel sakla",later:"Soňra",archived:"Arhiwe goşuldy",nothing:"Sanaw boş"});
+Object.assign(T.en,{tabCalc:"Calc",tabArc:"Archive",arcEmpty:"Archive is empty",open:"open",back:"← Back",xDay:"Excel: this day",xAll:"Excel: all",xImp:"From Excel",pull:"From server",pend:"waiting to sync: ",synced:"all synced",nItems:"items",gotN:"Added: ",noX:"Excel unavailable",batch:"Batch",rateL:"Rate",xb:"Excel for past days is not saved. Days: ",xSave:"Save Excel",later:"Later",archived:"Added to archive",nothing:"The list is empty"});
 const K="og-yd1";
 let S={lang:"ru",theme:"",rate:"",mode:"usd",cur:"",items:[]};
 try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
@@ -153,8 +151,7 @@ function text(){
 document.documentElement.lang=S.lang;gateText();$("tabs").children[0].textContent=t("tabCalc");$("tabs").children[1].textContent=t("tabArc");if(typeof VIEW!=="undefined"&&VIEW==="arc")arc();if(typeof xbHide!=="undefined")xbar();
 const m={"t-title":"title","t-backup":"backup","t-rate":"rate","t-items":"items","t-ty":"ty","t-tu":"tu"};
 for(const id in m)$(id).textContent=t(m[id]);
-$("save").textContent=t("save");$("add").textContent=t("add");$("clear").textContent=t("clear");
-$("t-file").textContent=t("file");
+$("save").textContent=t("save");$("add").textContent=t("add");
 document.querySelectorAll("#langs button,#glangs button").forEach(b=>b.classList.toggle("on",b.dataset.l===S.lang));
 list();
 }
@@ -193,13 +190,8 @@ $("add").onclick=()=>{S.items.push({name:"",yuan:""});save();list();const n=docu
 $("langs").onclick=$("glangs").onclick=e=>{const l=e.target.dataset.l;if(l){S.lang=l;save();text()}};
 $("theme").onclick=()=>{const dark=S.theme?S.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;S.theme=dark?"light":"dark";save();theme()};
 $("mbtn").onclick=()=>{$("menu").classList.toggle("open")};
-$("save").onclick=async()=>{const name="OG-yuan-dollar-backup.json",data=dump();
-const f=new File([data],name,{type:"application/json"});
-try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});say(t("copied"));return}}catch(e){if(e&&e.name==="AbortError")return}
-const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download=name;a.click();say(t("copied"))};
-$("file").onchange=e=>{const f=e.target.files[0];if(f)f.text().then(apply);e.target.value=""};
-$("clear").onclick=()=>{if(!armed){armed=true;$("clear").textContent=t("sure");setTimeout(()=>{armed=false;$("clear").textContent=t("clear")},3000);return}
-armed=false;closeCur();S.items=[];save();list();$("clear").textContent=t("clear")};
+$("save").onclick=()=>{if(!S.items.some(i=>i.name||i.yuan)){say(t("nothing"));return}
+closeCur();S.items=[];save();list();$("menu").classList.remove("open");DAY=null;view("arc");say(t("archived"))};
 function closeCur(){touch();const b=ARC.b.find(x=>x.id===S.cur);if(b){b.c=true;b.v++;asave()}S.cur="";clearTimeout(syT);syT=setTimeout(sync,1000)}
 function roll(){const b=ARC.b.find(x=>x.id===S.cur);if(b&&b.day!==today()){b.c=true;b.v++;S.cur="";S.items=[];asave();save();list()}}
 const OPEN=!(window.OG&&window.OG.url);
@@ -208,7 +200,7 @@ function pendDays(){const m={},td=today();ARC.b.forEach(b=>{if(b.day<td&&b.items
 function xbar(){const el=$("xb"),P=pendDays();if(!P.length||xbHide){el.hidden=true;return}
 el.hidden=false;el.innerHTML="";el.append(h("div","",t("xb")+P.length));
 const bt=h("div","btns"),s=h("button","",t("xSave")),l=h("button","",t("later"));
-s.onclick=async()=>{const bs=P.flatMap(g=>g.bs),n=P.length===1?P[0].d:P[0].d+"_"+P[P.length-1].d;if(await xport(bs,"OG-arsiv-"+n+".xlsx")){P.forEach(g=>{ARC.ex[g.d]=true});asave();xbar()}};
+s.onclick=async()=>{const bs=P.flatMap(g=>g.bs),n=P.length===1?P[0].d:P[0].d+"_"+P[P.length-1].d;if(await xport(bs,n+" Arhiw.xlsx")){P.forEach(g=>{ARC.ex[g.d]=true});asave();xbar()}};
 l.onclick=()=>{xbHide=true;xbar()};bt.append(s,l);el.append(bt)}
 let syncing=false;
 async function sync(){const c=window.OG||{};if(syncing||!A||!A.code||!navigator.onLine||!c.url)return;
@@ -228,16 +220,16 @@ function days(){const m={};ARC.b.forEach(b=>{if(!b.items.length)return;(m[b.day]
 return Object.keys(m).sort().reverse().map(d=>({d,bs:m[d].sort((a,c)=>(a.ts||0)-(c.ts||0))}))}
 function tot(bs){let y=0,u=0,n=0;bs.forEach(b=>b.items.forEach(i=>{const v=num(i.yuan);y+=v;n++;if(b.r>0)u+=v/b.r}));return{y,u,n}}
 async function xport(bs,name){if(!window.XLSX){say(t("noX"));return false}
-const rows=[];bs.forEach(b=>b.items.forEach(i=>{const v=num(i.yuan);rows.push({Day:b.day,Batch:b.id,Closed:b.c?1:0,Product:i.name,Yuan:v,Rate:b.r||"",USD:b.r>0?+(v/b.r).toFixed(2):""})}));
+const rows=[];bs.forEach(b=>b.items.forEach(i=>{const v=num(i.yuan);rows.push({"Дата":b.day,"Партия":b.id,"Закрыта":b.c?"да":"нет","Товар":i.name,"Юани":v,"Курс":b.r||"","Доллары":b.r>0?+(v/b.r).toFixed(2):""})}));
 const ds={};bs.forEach(b=>{(ds[b.day]=ds[b.day]||[]).push(b)});
-const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Data");
-XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.keys(ds).sort().map(d=>{const x=tot(ds[d]);return{Day:d,Items:x.n,Yuan:+x.y.toFixed(2),USD:+x.u.toFixed(2)}})),"Totals");
+const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),"Данные");
+XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.keys(ds).sort().map(d=>{const x=tot(ds[d]);return{"Дата":d,"Товаров":x.n,"Юани":+x.y.toFixed(2),"Доллары":+x.u.toFixed(2)}})),"Итоги");
 const f=new File([XLSX.write(wb,{bookType:"xlsx",type:"array"})],name,{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
 try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});say(t("copied"));return true}}catch(e){if(e&&e.name==="AbortError")return false}
 const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=name;a.click();say(t("copied"));return true}
 async function imp(f){if(!window.XLSX){say(t("noX"));return}
 try{const wb=XLSX.read(await f.arrayBuffer(),{type:"array"}),rs=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]),m={};
-rs.forEach(r=>{if(!r.Batch||!r.Day)return;const k=String(r.Batch),b=m[k]=m[k]||{id:k,day:dd(r.Day),r:num(r.Rate),items:[],c:true,v:1,sv:-1,ts:0};b.items.push({name:String(r.Product||""),yuan:String(r.Yuan==null?"":r.Yuan)})});
+rs.forEach(r=>{const D=r["Дата"]??r.Day,B=r["Партия"]??r.Batch,R=r["Курс"]??r.Rate,P=r["Товар"]??r.Product,Y=r["Юани"]??r.Yuan;if(!B||!D)return;const k=String(B),b=m[k]=m[k]||{id:k,day:dd(D),r:num(R),items:[],c:true,v:1,sv:-1,ts:0};b.items.push({name:String(P||""),yuan:String(Y==null?"":Y)})});
 let n=0;Object.values(m).forEach(b=>{if(!ARC.b.find(x=>x.id===b.id)){ARC.b.push(b);n++}});
 Object.values(m).forEach(b=>{ARC.ex[b.day]=true});asave();sync();arc();xbar();say(t("gotN")+n)}catch(e){say(t("bad"))}}
 const h=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
@@ -247,14 +239,14 @@ document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.d
 function arc(){const el=$("arcbody");el.innerHTML="";const D=days(),bar=h("div","btns");
 const btn=(txt,fn)=>{const b=h("button","",txt);b.onclick=fn;return b};
 if(DAY){const g=D.find(x=>x.d===DAY);if(!g){DAY=null;return arc()}
-bar.append(btn(t("back"),()=>{DAY=null;arc()}),btn(t("xDay"),async()=>{if(await xport(g.bs,"OG-arsiv-"+g.d+".xlsx")){ARC.ex[g.d]=true;asave();xbar()}}));el.append(bar,h("h2","",fday(g.d)));
+bar.append(btn(t("back"),()=>{DAY=null;arc()}),btn(t("xDay"),async()=>{if(await xport(g.bs,g.d+" Arhiw.xlsx")){ARC.ex[g.d]=true;asave();xbar()}}));el.append(bar,h("h2","",fday(g.d)));
 const c=h("div","card");
 g.bs.forEach((b,i)=>{c.append(h("div","bh",t("batch")+" "+(i+1)+" · "+t("rateL")+" "+(b.r>0?fmt(b.r):"—")+(b.c?"":" · "+t("open"))));
 b.items.forEach(it=>{const v=num(it.yuan),r=h("div","ar");r.append(h("span","",it.name||"—"),h("span","","¥ "+fmt(v)+(b.r>0?"  ·  $ "+fmt(v/b.r):"")));c.append(r)})});
 const x=tot(g.bs),tc=h("div","card");tc.append(h("b","","¥ "+fmt(x.y)+"  ·  $ "+fmt(x.u)+"  ("+x.n+" "+t("nItems")+")"));el.append(c,tc)}
 else{const f=h("input");f.type="file";f.accept=".xlsx";f.hidden=true;f.onchange=e=>{const x=e.target.files[0];if(x)imp(x);e.target.value=""};
 const lab=h("label","",t("xImp"));lab.append(f);const pend=ARC.b.filter(b=>b.v!==b.sv).length;
-bar.append(btn(t("xAll"),async()=>{if(await xport(D.flatMap(g=>g.bs),"OG-arsiv-hepsi.xlsx")){D.forEach(g=>{ARC.ex[g.d]=true});asave();xbar()}}),lab,...(OPEN?[]:[btn(t("pull"),pull)]));el.append(bar);if(!OPEN)el.append(h("div","lb",pend?t("pend")+pend:t("synced")));
+bar.append(btn(t("xAll"),async()=>{if(await xport(D.flatMap(g=>g.bs),today()+" Arhiw.xlsx")){D.forEach(g=>{ARC.ex[g.d]=true});asave();xbar()}}),lab,...(OPEN?[]:[btn(t("pull"),pull)]));el.append(bar);if(!OPEN)el.append(h("div","lb",pend?t("pend")+pend:t("synced")));
 if(!D.length)el.append(h("div","empty",t("arcEmpty")));
 D.forEach(g=>{const x=tot(g.bs),r=h("div","dayrow"),l=h("div");
 l.append(h("b","",fday(g.d)),h("small","",x.n+" "+t("nItems")+(g.d===today()&&g.bs.some(b=>!b.c)?" · "+t("open"):"")));
